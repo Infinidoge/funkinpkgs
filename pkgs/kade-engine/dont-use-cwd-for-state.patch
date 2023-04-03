@@ -1,0 +1,102 @@
+From 2d56d8e1bdfabac107a3020e980809486b191658 Mon Sep 17 00:00:00 2001
+From: Infinidoge <infinidoge@inx.moe>
+Date: Sun, 2 Apr 2023 21:34:09 -0400
+Subject: [PATCH] dont use cwd for state
+
+---
+ source/Debug.hx           |  6 +++++-
+ source/LoadReplayState.hx |  6 +++++-
+ source/Replay.hx          | 14 +++++++++++---
+ source/TitleState.hx      |  8 ++++++--
+ 4 files changed, 27 insertions(+), 7 deletions(-)
+
+diff --git a/source/Debug.hx b/source/Debug.hx
+index bd1142a..29d6235 100644
+--- a/source/Debug.hx
++++ b/source/Debug.hx
+@@ -368,7 +368,11 @@ class DebugLogWriter
+ 		#if FEATURE_FILESYSTEM
+ 		printDebug("Initializing log file...");
+ 
+-		var logFilePath = '$LOG_FOLDER/${Sys.time()}.log';
++        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/state";
++        }
++		var logFilePath = initial_path + '/$LOG_FOLDER/${Sys.time()}.log';
+ 
+ 		// Make sure that the path exists
+ 		if (logFilePath.indexOf("/") != -1)
+diff --git a/source/LoadReplayState.hx b/source/LoadReplayState.hx
+index 627f8e0..0cedbe6 100644
+--- a/source/LoadReplayState.hx
++++ b/source/LoadReplayState.hx
+@@ -40,7 +40,11 @@ class LoadReplayState extends MusicBeatState
+ 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('menuDesat'));
+ 		// TODO: Refactor this to use OpenFlAssets.
+ 		#if FEATURE_FILESYSTEM
+-		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "/assets/replays/");
++        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/state";
++        }
++		controlsStrings = sys.FileSystem.readDirectory(initial_path + "/KadeEngine/replays/");
+ 		#end
+ 		trace(controlsStrings);
+ 
+diff --git a/source/Replay.hx b/source/Replay.hx
+index edcf6e0..997234e 100644
+--- a/source/Replay.hx
++++ b/source/Replay.hx
+@@ -120,7 +120,11 @@ class Replay
+ 		var time = Date.now().getTime();
+ 
+ 		#if FEATURE_FILESYSTEM
+-		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
++        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/state";
++        }
++		File.saveContent(initial_path + "/KadeEngine/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
+ 
+ 		path = "replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay"; // for score screen shit
+ 
+@@ -133,10 +137,14 @@ class Replay
+ 	public function LoadFromJSON()
+ 	{
+ 		#if FEATURE_FILESYSTEM
+-		trace('loading ' + Sys.getCwd() + 'assets/replays/' + path + ' replay...');
++        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/state";
++        }
++		trace('loading ' + initial_path + '/KadeEngine/replays/' + path + ' replay...');
+ 		try
+ 		{
+-			var repl:ReplayJSON = cast Json.parse(File.getContent(Sys.getCwd() + "assets/replays/" + path));
++			var repl:ReplayJSON = cast Json.parse(File.getContent(initial_path + "/KadeEngine/replays/" + path));
+ 			replay = repl;
+ 		}
+ 		catch (e)
+diff --git a/source/TitleState.hx b/source/TitleState.hx
+index d3f05e4..e2f6585 100644
+--- a/source/TitleState.hx
++++ b/source/TitleState.hx
+@@ -47,8 +47,12 @@ class TitleState extends MusicBeatState
+ 	{
+ 		// TODO: Refactor this to use OpenFlAssets.
+ 		#if FEATURE_FILESYSTEM
+-		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
+-			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
++        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/state";
++        }
++		if (!sys.FileSystem.exists(initial_path + "/KadeEngine/replays"))
++			sys.FileSystem.createDirectory(initial_path + "/KadeEngine/replays");
+ 		#end
+ 
+ 		@:privateAccess
+-- 
+2.39.2
+

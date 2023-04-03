@@ -19,6 +19,7 @@
     {
       packages = {
         funkin = callPackage ./pkgs/funkin { };
+        kade-engine = callPackage ./pkgs/kade-engine { };
       };
 
       legacyPackages = {

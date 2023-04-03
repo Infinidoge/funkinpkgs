@@ -1,4 +1,5 @@
 { stdenv
+, multiStdenv
 , lib
 , fetchzip
 , fetchFromGitHub
@@ -64,7 +65,7 @@ let
       } // attrs.meta;
     });
 in
-{
+rec {
   hxcpp = buildHaxeLib rec {
     libname = "hxcpp";
     version = "4.2.1";
@@ -116,6 +117,16 @@ in
     };
   };
 
+  actuate = buildHaxeLib {
+    libname = "actuate";
+    version = "1.9.0";
+    sha256 = "sha256-9Z4PYjQKTmwT25xlP+5FDcCgOS2hPD45D4L0I2tIpvY=";
+    meta = with lib; {
+      license = licenses.mit;
+      description = "A fast and flexible tween library that uses a jQuery-style 'chaining' syntax.";
+    };
+  };
+
   flixel = buildHaxeLib {
     libname = "flixel";
     version = "4.11.0";
@@ -143,6 +154,16 @@ in
     meta = with lib; {
       license = licenses.mit;
       description = "UI library for Flixel";
+    };
+  };
+
+  flixel-tools = buildHaxeLib {
+    libname = "flixel-tools";
+    version = "1.5.1";
+    sha256 = "sha256-0PvkU/r5pOQslo9b2SqRcDcBiKsb0Ete8QfrwSEPEaw=";
+    meta = with lib; {
+      license = licenses.mit;
+      description = "Command-Line tools for the HaxeFlixel game engine";
     };
   };
 
@@ -179,6 +200,91 @@ in
     meta = with lib; {
       license = licenses.mit;
       description = "Native bindings for discord-rpc";
+    };
+  };
+
+  linc_luajit = buildHaxeLib {
+    libname = "linc_luajit";
+    version = "unstable-2022-09-30";
+    src = fetchFromGitHub {
+      owner = "nebulazorua";
+      repo = "linc_luajit";
+      rev = "bcb4254e057f8a20710e2cd0985086370d57ecd1";
+      sha256 = "sha256-LuBBbHntgc3OnQiK+4eaGW849p2GWOUfMppUQIQaor0=";
+    };
+    meta = with lib; {
+      license = licenses.mit;
+      description = "Haxe/hxcpp native bindings for LuaJIT";
+    };
+  };
+
+  hxvm-luajit = buildHaxeLib {
+    libname = "hxvm-luajit";
+    version = "unstable-2021-10-18";
+    src = fetchFromGitHub {
+      owner = "nebulazorua";
+      repo = "hxvm-luajit";
+      rev = "5d59ea1172be619bcda2668e27b828fdb10d78d7";
+      sha256 = "sha256-/Non4Y0vUz5+b7WpuhcehXVoa1e7qdZlh28v2sZDYGk=";
+    };
+    meta = with lib; {
+      license = licenses.mit;
+      description = "Haxe Lua Bindings (Embed Lua runtime in your Haxe app)";
+    };
+  };
+
+  faxe = buildHaxeLib {
+    libname = "faxe";
+    version = "unstable-2019-07-26";
+    src = fetchFromGitHub {
+      owner = "ashea-code";
+      repo = "faxe";
+      rev = "89be1d2f82f65a94ee3e0e8a01681fe1f0332228";
+      sha256 = "sha256-U6I4xocQObK+F7rKOrCVcEZA6abVo3kLuzoedb0lGv8=";
+    };
+    meta = with lib; {
+      license = licenses.mit;
+      description = "FMOD Audio Engine for Haxe";
+    };
+  };
+
+  extension-webm = multiStdenv.mkDerivation rec {
+    pname = "extension-webm";
+    version = "unstable-2021-06-01";
+
+
+    src = fetchFromGitHub {
+      owner = "KadeDev";
+      repo = "extension-webm";
+      rev = "809fda4776b11dd4ba15002c68249600b8bc1db0";
+      sha256 = "sha256-dhJVlAVUev9ZqDQyGbicbSVxP90L7liLBnMgwP/lzbk=";
+    };
+
+    buildInputs = [ haxe neko lime hxcpp ];
+
+    buildPhase = ''
+      runHook preBuild
+
+      export HOME=$PWD
+      devrepo=$(mktemp -d)
+      mkdir -p "$devrepo/${withCommas pname}"
+      echo $(pwd) > "$devrepo/${withCommas pname}/.dev"
+      export HAXELIB_PATH="$HAXELIB_PATH:$devrepo"
+      haxelib run lime rebuild extension-webm linux
+
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      mkdir -p "$out/lib/haxe/${withCommas pname}/${withCommas version}"
+      echo -n "${version}" > $out/lib/haxe/${withCommas pname}/.current
+      cp -dpR * "$out/lib/haxe/${withCommas pname}/${withCommas version}/"
+    '';
+
+    meta = with lib; {
+      license = licenses.bsd2;
+      description = "webm extension for haxe";
+      platforms = lib.platforms.linux;
     };
   };
 }
