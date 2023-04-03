@@ -6,7 +6,7 @@
     fu.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, fu, ... }: fu.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, fu, ... }: (with fu.lib; eachSystem [ system.x86_64-linux ]) (system:
     let
       pkgs = nixpkgs.legacyPackages.${system};
 
