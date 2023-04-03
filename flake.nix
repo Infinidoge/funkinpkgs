@@ -20,6 +20,10 @@
       packages = {
         funkin = callPackage ./pkgs/funkin { };
       };
+
+      legacyPackages = {
+        inherit haxePackages;
+      };
     }
   );
 }
