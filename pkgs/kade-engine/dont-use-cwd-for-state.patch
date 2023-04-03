@@ -19,9 +19,9 @@ index bd1142a..29d6235 100644
  		printDebug("Initializing log file...");
  
 -		var logFilePath = '$LOG_FOLDER/${Sys.time()}.log';
-+        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
 +        if (initial_path == null) {
-+            initial_path = Sys.getEnv("HOME") + "/.local/state";
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
 +        }
 +		var logFilePath = initial_path + '/$LOG_FOLDER/${Sys.time()}.log';
  
@@ -36,9 +36,9 @@ index 627f8e0..0cedbe6 100644
  		// TODO: Refactor this to use OpenFlAssets.
  		#if FEATURE_FILESYSTEM
 -		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "/assets/replays/");
-+        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
 +        if (initial_path == null) {
-+            initial_path = Sys.getEnv("HOME") + "/.local/state";
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
 +        }
 +		controlsStrings = sys.FileSystem.readDirectory(initial_path + "/KadeEngine/replays/");
  		#end
@@ -53,9 +53,9 @@ index edcf6e0..997234e 100644
  
  		#if FEATURE_FILESYSTEM
 -		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
-+        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
 +        if (initial_path == null) {
-+            initial_path = Sys.getEnv("HOME") + "/.local/state";
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
 +        }
 +		File.saveContent(initial_path + "/KadeEngine/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
  
@@ -66,9 +66,9 @@ index edcf6e0..997234e 100644
  	{
  		#if FEATURE_FILESYSTEM
 -		trace('loading ' + Sys.getCwd() + 'assets/replays/' + path + ' replay...');
-+        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
 +        if (initial_path == null) {
-+            initial_path = Sys.getEnv("HOME") + "/.local/state";
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
 +        }
 +		trace('loading ' + initial_path + '/KadeEngine/replays/' + path + ' replay...');
  		try
@@ -88,9 +88,9 @@ index d3f05e4..e2f6585 100644
  		#if FEATURE_FILESYSTEM
 -		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 -			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
-+        var initial_path = Sys.getEnv("XDG_STATE_DIR");
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
 +        if (initial_path == null) {
-+            initial_path = Sys.getEnv("HOME") + "/.local/state";
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
 +        }
 +		if (!sys.FileSystem.exists(initial_path + "/KadeEngine/replays"))
 +			sys.FileSystem.createDirectory(initial_path + "/KadeEngine/replays");
