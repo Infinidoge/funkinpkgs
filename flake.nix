@@ -10,14 +10,16 @@
     let
       pkgs = nixpkgs.legacyPackages.${system};
 
-      haxePackages = pkgs.haxePackages // pkgs.callPackage ./pkgs/haxelibs.nix { };
+      haxePackages = pkgs.haxePackages // pkgs.callPackage ./pkgs/haxelibs { };
 
       callPackage = pkgs.newScope {
         inherit haxePackages;
       };
     in
     {
-      packages.funkin = callPackage ./pkgs/funkin.nix { };
+      packages = {
+        funkin = callPackage ./pkgs/funkin { };
+      };
     }
   );
 }

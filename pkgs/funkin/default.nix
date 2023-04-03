@@ -114,7 +114,7 @@ stdenv.mkDerivation rec {
     homepage = "https://ninja-muffin24.itch.io/funkin";
     license = licenses.asl20;
     platforms = platforms.all;
-    maintainers = with maintainers; [ marius851000 ];
+    maintainers = with maintainers; [ infinidoge ];
     broken = stdenv.system != "x86_64-linux";
     mainProgram = "Funkin";
   };
