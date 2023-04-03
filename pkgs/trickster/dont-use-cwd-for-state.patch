@@ -1,0 +1,85 @@
+From a23df7e424f7db7c2e58f9383e7ddaf75489f00a Mon Sep 17 00:00:00 2001
+From: Infinidoge <infinidoge@inx.moe>
+Date: Mon, 3 Apr 2023 00:21:48 -0400
+Subject: [PATCH] dont-use-cwd-for-state.patch
+
+---
+ source/LoadReplayState.hx |  6 +++++-
+ source/Replay.hx          | 15 ++++++++++++---
+ source/TitleState.hx      |  8 ++++++--
+ 3 files changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/source/LoadReplayState.hx b/source/LoadReplayState.hx
+index e4bb136..0c623b9 100644
+--- a/source/LoadReplayState.hx
++++ b/source/LoadReplayState.hx
+@@ -33,7 +33,11 @@ class LoadReplayState extends MusicBeatState
+ 	{
+ 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+         #if sys
+-		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "\\assets\\replays\\");
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
++        }
++		controlsStrings = sys.FileSystem.readDirectory(initial_path + "/replays/");
+         #end
+ 		trace(controlsStrings);
+ 
+diff --git a/source/Replay.hx b/source/Replay.hx
+index 001f981..2b60f5d 100644
+--- a/source/Replay.hx
++++ b/source/Replay.hx
+@@ -77,7 +77,11 @@ class Replay
+         var data:String = Json.stringify(json);
+ 
+         #if sys
+-        File.saveContent("assets/replays/replay-" + PlayState.SONG.song + "-time" + Date.now().getTime() + ".kadeReplay", data);
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
++        }
++        File.saveContent(initial_path + "/replays/replay-" + PlayState.SONG.song + "-time" + Date.now().getTime() + ".kadeReplay", data);
+         #end
+     }
+ 
+@@ -85,10 +89,15 @@ class Replay
+     public function LoadFromJSON()
+     {
+         #if sys
+-        trace('loading ' + Sys.getCwd() + 'assets\\replays\\' + path + ' replay...');
++        var initial_path = Sys.getEnv("XDG_DATA_HOME");
++        if (initial_path == null) {
++            initial_path = Sys.getEnv("HOME") + "/.local/share";
++        }
++
++        trace('loading ' + initial_path + '/replays/' + path + ' replay...');
+         try
+         {
+-            var repl:ReplayJSON = cast Json.parse(File.getContent(Sys.getCwd() + "assets\\replays\\" + path));
++            var repl:ReplayJSON = cast Json.parse(File.getContent(initial_path + "/replays/" + path));
+             replay = repl;
+         }
+         catch(e)
+diff --git a/source/TitleState.hx b/source/TitleState.hx
+index f563e33..fdeff64 100644
+--- a/source/TitleState.hx
++++ b/source/TitleState.hx
+@@ -50,8 +50,12 @@ class TitleState extends MusicBeatState
+ 		#end
+ 		
+ 		#if sys
+-		if (!sys.FileSystem.exists(Sys.getCwd() + "\\assets\\replays"))
+-			sys.FileSystem.createDirectory(Sys.getCwd() + "\\assets\\replays");
++		var initial_path = Sys.getEnv("XDG_DATA_HOME");
++		if (initial_path == null) {
++			initial_path = Sys.getEnv("HOME") + "/.local/share";
++		}
++		if (!sys.FileSystem.exists(initial_path + "/replays"))
++			sys.FileSystem.createDirectory(initial_path + "/replays");
+ 		#end
+ 
+ 		if (FlxG.save.data.newInput == null)
+-- 
+2.39.2
+

@@ -19,6 +19,13 @@ Friday Night Funkin, built from the latest source commit.
 
 The Kade Engine fork of Friday Night Funkin
 
+### `trickster`
+
+[nix source](./pkgs/trickster),
+[upstream repository](https://github.com/KadeDev/trickster)
+
+The full Vs. Tricky mod.
+
 ## Credits
 
 Major credit goes to OPNA2608 and marius851000 who together made the [funkinnixpkgs branch](https://github.com/marius851000/nixpkgs/tree/funkinnixpkgs).
