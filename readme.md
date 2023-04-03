@@ -10,14 +10,14 @@ I aim to upstream these into Nixpkgs in the future, however right now they are i
 [nix source](./pkgs/funkin),
 [upstream repository](https://github.com/FunkinCrew/Funkin)
 
-Friday Night Funkin, built from the latest source commit.
+Friday Night Funkin', built from the latest source commit.
 
 ### `kade-engine`
 
 [nix source](./pkgs/kade-engine),
 [upstream repository](https://github.com/KadeDev/Kade-Engine)
 
-The Kade Engine fork of Friday Night Funkin
+The Kade Engine fork of Friday Night Funkin'.
 
 ### `trickster`
 
