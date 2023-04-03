@@ -102,9 +102,8 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "A Competitive Rhythm Game engine rewrite for FNF with Quality of Life features included.";
     license = licenses.asl20;
-    platforms = platforms.all;
+    platforms = platforms.linux;
     maintainers = with maintainers; [ infinidoge ];
-    broken = stdenv.system != "x86_64-linux";
     mainProgram = "Kade\ Engine";
   };
 }

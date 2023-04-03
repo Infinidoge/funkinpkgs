@@ -60,7 +60,7 @@ let
       meta = {
         homepage = "http://lib.haxe.org/p/${libname}";
         license = lib.licenses.bsd2;
-        platforms = lib.platforms.all;
+        platforms = lib.platforms.linux;
         description = throw "please write meta.description";
       } // attrs.meta;
     });
