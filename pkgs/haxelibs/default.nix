@@ -5,8 +5,6 @@
 , writeText
 , haxe
 , neko
-, jdk
-, mono
 }:
 
 let
